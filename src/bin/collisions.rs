@@ -1,7 +1,6 @@
+
 fn main() {
-    let a = 8274;
-    let b = 918;
-    let iterations = 100000;
+    let (a, b, iterations) = (8274, 1928, 100000);
     let mut collisions = 0;
 
     for _ in 0..iterations {
