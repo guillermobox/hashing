@@ -1,10 +1,11 @@
 use rand::Rng;
 
-const PRIME: u32 = 0x7FFFFFFF;
+const PRIME: u64 = 0x7FFFFFFF;
+const SIZE: u64 = 128;
 
 struct UniversalHashFunction {
-    n: u32,
-    m: u32,
+    n: u64,
+    m: u64,
 }
 
 impl UniversalHashFunction {
@@ -15,8 +16,8 @@ impl UniversalHashFunction {
     }
 
     fn evaluate(&self, x: u32) -> u32 {
-        let t: u64 = x as u64 * self.n as u64;
-        ((t + self.m as u64) % PRIME as u64) as u32 % 128
+        let x = x as u64;
+        (((x * self.n + self.m) % PRIME) % SIZE) as u32
     }
 }
 
@@ -28,8 +29,7 @@ fn main() {
 
     for _ in 0..iterations {
         let hash = UniversalHashFunction::new();
-        let keys = (hash.evaluate(a), hash.evaluate(b));
-        if keys.0 == keys.1 {
+        if hash.evaluate(a) == hash.evaluate(b) {
             collisions = collisions + 1;
         }
     }
