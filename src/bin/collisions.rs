@@ -1,4 +1,3 @@
-
 fn main() {
     let (a, b, iterations) = (8274, 1928, 100000);
     let mut collisions = 0;
@@ -10,5 +9,9 @@ fn main() {
         }
     }
 
-    println!("Collisions: {} Expected: {}", collisions, iterations / hashing::SIZE);
+    println!(
+        "Collisions: {} Expected: {}",
+        collisions,
+        iterations / hashing::SIZE
+    );
 }
