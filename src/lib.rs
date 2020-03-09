@@ -4,7 +4,7 @@ use rand::Rng;
 const PRIME: u64 = 0x7FFFFFFF;
 
 /// How big the target key-space is
-const SIZE: u64 = 128;
+pub const SIZE: u64 = 128;
 
 /// The universal hash function, can be evaluated
 pub struct UniversalHashFunction {

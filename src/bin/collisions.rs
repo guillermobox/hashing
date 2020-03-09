@@ -11,5 +11,5 @@ fn main() {
         }
     }
 
-    println!("Collisions: {} Expected: {}", collisions, iterations / 128);
+    println!("Collisions: {} Expected: {}", collisions, iterations / hashing::SIZE);
 }
