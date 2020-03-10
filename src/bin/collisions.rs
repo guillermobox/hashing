@@ -1,5 +1,5 @@
 fn main() {
-    let (a, b, iterations) = (8274, 1928, 100000);
+    let (a, b, iterations) = ("potato", "tomato", 100000);
     let mut collisions = 0;
 
     for _ in 0..iterations {

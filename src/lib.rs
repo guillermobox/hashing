@@ -1,15 +1,15 @@
 //! Universal hash function implementation
 use rand::Rng;
 
-const PRIME: u64 = 0x7FFFFFFF;
+const PRIME: u32 = 0x1FFF;
 
 /// How big the target key-space is
-pub const SIZE: u64 = 128;
+pub const SIZE: u32 = 128;
 
 /// The universal hash function, can be evaluated
 pub struct UniversalHashFunction {
-    n: u64,
-    m: u64,
+    n: u32,
+    m: u32,
 }
 
 impl UniversalHashFunction {
@@ -20,10 +20,13 @@ impl UniversalHashFunction {
         UniversalHashFunction { n, m }
     }
 
-    /// Evaluate the function for a particular value,
+    /// Evaluate the function for a particular string,
     /// will return a value between 0 and SIZE
-    pub fn evaluate(&self, x: u32) -> u32 {
-        let x = x as u64;
-        (((x * self.n + self.m) % PRIME) % SIZE) as u32
+    pub fn evaluate(&self, x: &str) -> u32 {
+        let mut hash = 0;
+        for c in x.bytes() {
+            hash = hash ^ (self.m * (c as u32) + self.n)
+        }
+        hash % PRIME % SIZE
     }
 }
