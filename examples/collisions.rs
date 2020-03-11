@@ -3,7 +3,7 @@ fn main() {
     let mut collisions = 0;
 
     for _ in 0..iterations {
-        let hash = hashing::UniversalHashFunction::new();
+        let hash = hashing::UniversalHashFunction::<u32>::new();
         if hash.evaluate(a) == hash.evaluate(b) {
             collisions = collisions + 1;
         }
