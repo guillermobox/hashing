@@ -4,49 +4,42 @@ use rand::Rng;
 const PRIMEU32: u32 = 0x1FFF;
 const PRIMEU64: u64 = 0x7FFFFFFF;
 
-/// How big the target key-space is
-pub const SIZE: u32 = 128;
-
-/// The universal hash function,
-/// that can be assembled for 32bits, 64bits, or other types
-pub struct UniversalHashFunction<T> {
-    n: T,
-    m: T,
+pub struct IntegerHashFunction {
+    n: u64,
+    m: u64,
+    size: u32,
 }
 
-pub trait Hashable<T> {
-    fn hash_with(&self, f: &UniversalHashFunction<T>) -> u32;
-}
-
-impl Hashable<u64> for u32 {
-    fn hash_with(&self, f: &UniversalHashFunction<u64>) -> u32 {
-        let x = *self as u64;
-        (((x * f.n + f.m) % PRIMEU64) % SIZE as u64) as u32
-    }
-}
-
-impl Hashable<u32> for str {
-    fn hash_with(&self, f: &UniversalHashFunction<u32>) -> u32 {
-        let mut hash = 0;
-        for c in self.bytes() {
-            hash = hash ^ (f.m * (c as u32) + f.n)
-        }
-        hash % PRIMEU32 % SIZE
-    }
-}
-
-impl UniversalHashFunction<u32> {
-    pub fn new() -> UniversalHashFunction<u32> {
-        let n = rand::thread_rng().gen_range(0, PRIMEU32);
-        let m = rand::thread_rng().gen_range(1, PRIMEU32);
-        UniversalHashFunction { n, m }
-    }
-}
-
-impl UniversalHashFunction<u64> {
-    pub fn new() -> UniversalHashFunction<u64> {
+impl IntegerHashFunction {
+    pub fn new(size: u32) -> IntegerHashFunction {
         let n = rand::thread_rng().gen_range(0, PRIMEU64);
         let m = rand::thread_rng().gen_range(1, PRIMEU64);
-        UniversalHashFunction { n, m }
+        IntegerHashFunction { n, m, size }
+    }
+    pub fn hash(&self, x: u32) -> u32 {
+        let x = x as u64;
+        (((x * self.n + self.m) % PRIMEU64) % self.size as u64) as u32
     }
 }
+
+pub struct StringHashFunction {
+    n: u32,
+    m: u32,
+    size: u32,
+}
+
+impl StringHashFunction {
+    pub fn new(size: u32) -> StringHashFunction {
+        let n = rand::thread_rng().gen_range(0, PRIMEU32);
+        let m = rand::thread_rng().gen_range(1, PRIMEU32);
+        StringHashFunction { n, m, size }
+    }
+    pub fn hash(&self, x: &str) -> u32 {
+        let mut hash = 0;
+        for c in x.bytes() {
+            hash = hash ^ (self.m * (c as u32) + self.n)
+        }
+        hash % PRIMEU32 % self.size
+    }
+}
+
